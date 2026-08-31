@@ -94,6 +94,43 @@ const About = () => {
           background: #1C2A20;
           color: #FFC72C;
         }
+        .cta-btn-hover:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 199, 44, 0.4) !important;
+        }
+
+        /* MOBIL RANG VA RETSEPTLAR MOSLASHUVCHANLIGI */
+        @media (max-width: 768px) {
+          .about-hero-title {
+            font-size: 26px !important;
+          }
+          .about-stats-container {
+            flex-direction: column !important;
+            gap: 16px !important;
+            padding: 20px 15px !important;
+          }
+          .about-stat-divider {
+            width: 100% !important;
+            height: 1px !important;
+          }
+          .about-story-section {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .about-story-img-wrapper {
+            height: 280px !important;
+          }
+          .about-story-text-card {
+            padding: 20px !important;
+          }
+          .about-cta-box {
+            padding: 24px 16px !important;
+            margin-top: 40px !important;
+          }
+          .about-cta-title {
+            font-size: 22px !important;
+          }
+        }
       `}</style>
 
       <div style={styles.contentWrapper} className="animate-fade">
@@ -119,7 +156,7 @@ const About = () => {
             <span style={{ color: "#D97706" }}>{t.brandTag}</span>
           </div>
 
-          <h1 style={styles.heroTitle}>
+          <h1 style={styles.heroTitle} className="about-hero-title">
             {t.heroTitlePart1} <br />
             <span style={styles.highlightText}>{t.heroTitlePart2}</span>
           </h1>
@@ -128,21 +165,21 @@ const About = () => {
         </div>
 
         {/* STATS SECTION */}
-        <div style={styles.statsContainer}>
+        <div style={styles.statsContainer} className="about-stats-container">
           {t.stats.map((st, idx) => (
             <div key={idx} style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "space-around" }}>
               <div style={styles.statBox}>
                 <span style={styles.statNumber}>{st.num}</span>
                 <span style={styles.statLabel}>{st.label}</span>
               </div>
-              {idx < t.stats.length - 1 && <div style={styles.statDivider} />}
+              {idx < t.stats.length - 1 && <div style={styles.statDivider} className="about-stat-divider" />}
             </div>
           ))}
         </div>
 
         {/* STORY SECTION */}
-        <div style={styles.storySection}>
-          <div style={styles.storyImageWrapper}>
+        <div style={styles.storySection} className="about-story-section">
+          <div style={styles.storyImageWrapper} className="about-story-img-wrapper">
             <img 
               src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnJ27U82h3IsRnPMApXl3EAZPhMXBUTkTRXE4Y_M1fcIkSBoCRffCti44ahuY2B4owMbAp_7TNJ3BzWQHRALtD4CfVMtHPdnmXxUHjEOYAMnZJvvSFImhYfXMmcw3sLgjBRRv_S0XCDVVZc=s1360-w1360-h1020-rw" 
               alt="7TEEN Cafe Atmosphere" 
@@ -154,7 +191,7 @@ const About = () => {
             </div>
           </div>
 
-          <div style={styles.storyTextCard}>
+          <div style={styles.storyTextCard} className="about-story-text-card">
             <span style={styles.sectionBadge}>{t.philosophyBadge}</span>
             <h2 style={styles.sectionTitle}>{t.philosophyTitle}</h2>
             <p style={styles.storyParagraph}>{t.philosophyP1}</p>
@@ -163,15 +200,15 @@ const About = () => {
         </div>
 
         {/* REVIEWS COMPONENT */}
-        <div style={{ marginTop: "70px" }}>
+        <div style={{ marginTop: "50px" }}>
           <Reviews currentLang={lang} />
         </div>
 
         {/* CTA BOX */}
-        <div style={styles.ctaBox}>
-          <h2 style={styles.ctaTitle}>{t.ctaTitle}</h2>
+        <div style={styles.ctaBox} className="about-cta-box">
+          <h2 style={styles.ctaTitle} className="about-cta-title">{t.ctaTitle}</h2>
           <p style={styles.ctaSubtitle}>{t.ctaSubtitle}</p>
-          <Link to="/menu" style={styles.ctaBtn}>
+          <Link to="/menu" style={styles.ctaBtn} className="cta-btn-hover">
             {t.ctaBtn}
           </Link>
         </div>
@@ -185,7 +222,7 @@ const styles = {
     minHeight: "100vh",
     width: "100%",
     backgroundColor: "#FAF7F2",
-    padding: "40px 20px 80px 20px",
+    padding: "30px 16px 60px 16px",
     display: "flex",
     justifyContent: "center",
     fontFamily: "'Inter', -apple-system, sans-serif",
@@ -197,19 +234,19 @@ const styles = {
   },
   heroSection: {
     textAlign: "center",
-    marginBottom: "40px",
+    marginBottom: "35px",
   },
   brandBadge: {
     fontSize: "11px",
     fontWeight: "800",
     color: "#1C2A20",
-    letterSpacing: "2px",
+    letterSpacing: "1.5px",
     display: "inline-flex",
     alignItems: "center",
     gap: "8px",
-    marginBottom: "16px",
+    marginBottom: "14px",
     backgroundColor: "#FFFFFF",
-    padding: "6px 16px",
+    padding: "6px 14px",
     borderRadius: "20px",
     border: "1px solid #EAE3D9",
   },
@@ -217,39 +254,39 @@ const styles = {
     color: "#D1C7BD",
   },
   heroTitle: {
-    fontSize: "40px",
+    fontSize: "38px",
     fontWeight: "900",
     color: "#1C2A20",
-    margin: "0 0 16px 0",
-    lineHeight: "1.2",
+    margin: "0 0 14px 0",
+    lineHeight: "1.25",
     letterSpacing: "-0.5px",
   },
   highlightText: {
     color: "#D97706",
   },
   heroSubtitle: {
-    fontSize: "15px",
+    fontSize: "14px",
     color: "#6B7280",
-    maxWidth: "600px",
+    maxWidth: "580px",
     margin: "0 auto",
     lineHeight: "1.6",
   },
   statsContainer: {
     backgroundColor: "#FFFFFF",
-    borderRadius: "24px",
-    padding: "26px 20px",
+    borderRadius: "20px",
+    padding: "24px 20px",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
     border: "1px solid #EFEBE4",
     boxShadow: "0 10px 30px rgba(28, 42, 32, 0.04)",
-    marginBottom: "50px",
+    marginBottom: "40px",
   },
   statBox: {
     textAlign: "center",
   },
   statNumber: {
-    fontSize: "30px",
+    fontSize: "26px",
     fontWeight: "900",
     color: "#1C2A20",
     display: "block",
@@ -258,7 +295,7 @@ const styles = {
     fontSize: "12px",
     color: "#888",
     fontWeight: "700",
-    marginTop: "4px",
+    marginTop: "2px",
   },
   statDivider: {
     width: "1px",
@@ -273,7 +310,7 @@ const styles = {
   },
   storyImageWrapper: {
     position: "relative",
-    borderRadius: "24px",
+    borderRadius: "20px",
     overflow: "hidden",
     height: "360px",
     border: "1px solid #EFEBE4",
@@ -287,21 +324,22 @@ const styles = {
   },
   imageOverlayBadge: {
     position: "absolute",
-    bottom: "16px",
-    left: "16px",
+    bottom: "14px",
+    left: "14px",
     backgroundColor: "rgba(28, 42, 32, 0.85)",
     backdropFilter: "blur(8px)",
     color: "#FFC72C",
-    padding: "8px 16px",
-    borderRadius: "14px",
-    fontSize: "12px",
+    padding: "6px 14px",
+    borderRadius: "12px",
+    fontSize: "11px",
     fontWeight: "800",
   },
   storyTextCard: {
     backgroundColor: "#FFFFFF",
-    borderRadius: "24px",
-    padding: "32px",
+    borderRadius: "20px",
+    padding: "28px",
     border: "1px solid #EFEBE4",
+    boxShadow: "0 10px 30px rgba(28, 42, 32, 0.03)",
   },
   sectionBadge: {
     color: "#D97706",
@@ -312,46 +350,47 @@ const styles = {
     marginBottom: "8px",
   },
   sectionTitle: {
-    fontSize: "26px",
+    fontSize: "24px",
     fontWeight: "900",
     color: "#1C2A20",
-    margin: "0 0 16px 0",
+    margin: "0 0 14px 0",
   },
   storyParagraph: {
     fontSize: "14px",
     color: "#555",
-    lineHeight: "1.7",
+    lineHeight: "1.65",
     marginBottom: "12px",
   },
   ctaBox: {
-    marginTop: "70px",
+    marginTop: "50px",
     backgroundColor: "#1C2A20",
-    borderRadius: "28px",
-    padding: "40px",
+    borderRadius: "24px",
+    padding: "36px 20px",
     textAlign: "center",
     color: "#FFFFFF",
     boxShadow: "0 15px 35px rgba(28, 42, 32, 0.2)",
   },
   ctaTitle: {
-    fontSize: "28px",
+    fontSize: "26px",
     fontWeight: "900",
-    margin: "0 0 10px 0",
+    margin: "0 0 8px 0",
   },
   ctaSubtitle: {
-    fontSize: "14px",
+    fontSize: "13px",
     color: "#A3B18A",
-    margin: "0 0 24px 0",
+    margin: "0 0 20px 0",
   },
   ctaBtn: {
     display: "inline-block",
     backgroundColor: "#FFC72C",
     color: "#1C2A20",
-    padding: "14px 32px",
-    borderRadius: "14px",
+    padding: "12px 28px",
+    borderRadius: "12px",
     fontWeight: "900",
-    fontSize: "14px",
+    fontSize: "13px",
     textDecoration: "none",
     boxShadow: "0 4px 15px rgba(255, 199, 44, 0.3)",
+    transition: "all 0.2s ease",
   },
 };
 

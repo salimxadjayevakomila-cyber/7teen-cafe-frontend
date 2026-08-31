@@ -9,17 +9,18 @@ export const Products = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
- 
+
   useEffect(() => {
     setIsLoading(true);
-    
-    
-    instance.get("/products")
+
+    instance
+      .get("/products")
       .then((res) => {
-        setProducts(res.data);
-  
+        const data = Array.isArray(res.data) ? res.data : res.data.products || [];
+        setProducts(data);
+
         const uniqueCategories = [
-          ...new Set(res.data.map((item) => item.category).filter(Boolean))
+          ...new Set(data.map((item) => item.category).filter(Boolean))
         ];
         setCategories(uniqueCategories);
       })
@@ -31,40 +32,29 @@ export const Products = () => {
       });
   }, []);
 
-  
-  const filteredProducts = selectedCategory === "all"
-    ? products
-    : products.filter((item) => item.category === selectedCategory);
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((item) => item.category === selectedCategory);
 
   return (
-    <div style={{ padding: "20px" }}>
-    
+    <div className="p-2 sm:p-5 max-w-7xl mx-auto">
       <CategoryFilter
         categories={categories}
         selectedCategory={selectedCategory}
-        onSelectCategory={(category) => setSelectedCategory(category)}
+        onSelectCategory={setSelectedCategory}
       />
 
- 
       {isLoading ? (
         <Loading />
       ) : filteredProducts.length > 0 ? (
-       
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: "20px",
-            marginTop: "20px"
-          }}
-        >
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-4 mt-4">
           {filteredProducts.map((item) => (
             <ProductsCard key={item._id || item.id} product={item} />
           ))}
         </div>
       ) : (
-    
-        <div style={{ textAlign: "center", padding: "40px 0", color: "#666" }}>
+        <div className="text-center py-10 text-gray-500 text-xs sm:text-base">
           Bu kategoriyada hech qanday mahsulot topilmadi.
         </div>
       )}

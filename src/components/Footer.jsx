@@ -1,10 +1,8 @@
- 
  import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer style={styles.footerContainer}>
-  
       <style>{`
         .footer-link {
           color: #A39B8E;
@@ -56,11 +54,26 @@ const Footer = () => {
           color: #1C2A20;
           transform: translateY(-2px);
         }
+        
+        /* Mobil va Planshet uchun Media Queries */
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+            text-align: left;
+          }
+          .footer-bottom {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+          }
+        }
       `}</style>
 
       <div style={styles.contentWrapper}>
-        <div style={styles.gridContainer}>
+        <div style={styles.gridContainer} className="footer-grid">
        
+          {/* Brend qismi */}
           <div style={styles.brandColumn}>
             <div style={styles.logoBox}>
               <span style={{ fontSize: "22px" }}>☕️</span>
@@ -81,6 +94,7 @@ const Footer = () => {
             </div>
           </div>
  
+          {/* Navigatsiya */}
           <div>
             <h4 style={styles.columnTitle}>NAVIGATSIYA</h4>
             <ul style={styles.linkList}>
@@ -91,7 +105,7 @@ const Footer = () => {
             </ul>
           </div>
 
-      
+          {/* Ish vaqti */}
           <div>
             <h4 style={styles.columnTitle}>ISH VAQTI</h4>
             <div style={styles.hoursBox}>
@@ -106,7 +120,7 @@ const Footer = () => {
             </p>
           </div>
 
-        
+          {/* Aloqa */}
           <div>
             <h4 style={styles.columnTitle}>ALOQA VA MANZIL</h4>
             <p style={styles.contactItem}>
@@ -116,7 +130,6 @@ const Footer = () => {
               📞 <strong>Tel:</strong> <a href="tel:+998504449969" style={{ color: "#FFC72C", textDecoration: "none" }}>+998 50 444 99 69</a>
             </p>
             
-      
             <a 
               href="https://www.google.com/maps/vt/data=QFo-8XNef3SpAIqpzhnX1tscjc2tLcAQQsLJcpui6QOhSD_11RbhXYJOHaVlBjFw3aLc9KbO2jd31CFcVA9F9ZyWsZVBglS8UKIvKs4JWIR0mKH1lW_qihUZz17CcqkuFShyPfZIwzy8pPzxNkfH_8h14h6rVr16VqDgeVfjffgX&w=366&h=160" 
               target="_blank" 
@@ -129,8 +142,8 @@ const Footer = () => {
 
         </div>
 
-   
-        <div style={styles.bottomBar}>
+        {/* Bottom bar */}
+        <div style={styles.bottomBar} className="footer-bottom">
           <p style={styles.copyrightText}>
             © 2026 <strong>7TEEN Cafe</strong>. Barcha huquqlar himoyalangan.
           </p>
@@ -148,7 +161,7 @@ const styles = {
   footerContainer: {
     backgroundColor: "#1C2A20",  
     color: "#FAF7F2",
-    paddingTop: "60px",
+    paddingTop: "40px",
     paddingBottom: "30px",
     borderTop: "3px solid #FFC72C",
     fontFamily: "'Inter', -apple-system, sans-serif",
@@ -164,7 +177,7 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "1.5fr 1fr 1fr 1.2fr",
     gap: "40px",
-    paddingBottom: "40px",
+    paddingBottom: "30px",
     borderBottom: "1px solid #2C3E31",
   },
   brandColumn: {
@@ -197,7 +210,7 @@ const styles = {
     fontSize: "12px",
     fontWeight: "900",
     letterSpacing: "1.5px",
-    marginBottom: "18px",
+    marginBottom: "14px",
     textTransform: "uppercase",
   },
   linkList: {
@@ -227,7 +240,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "24px",
+    paddingTop: "20px",
     flexWrap: "wrap",
     gap: "15px",
   },

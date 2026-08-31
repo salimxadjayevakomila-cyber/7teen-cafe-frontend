@@ -299,20 +299,42 @@ export default function Menu() {
           object-position: center !important;
           display: block !important;
         }
+
+        /* Bon! Cafe stiliga moslashtirilgan grid: Telefondan 3 ta ustun */
+        .menu-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          align-items: stretch;
+        }
+
+        @media (min-width: 640px) {
+          .menu-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .menu-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+          }
+        }
       `}</style>
 
       <div style={{
         backgroundColor: '#F5EFE6',
-        padding: '16px 20px',
+        padding: '12px 14px',
         color: '#1C2A20',
-        borderBottomLeftRadius: '20px',
-        borderBottomRightRadius: '20px',
+        borderBottomLeftRadius: '16px',
+        borderBottomRightRadius: '16px',
         border: '1px solid #EAE3D9',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '12px',
-        flexWrap: 'wrap'
+        gap: '8px',
+        flexWrap: 'nowrap'
       }}>
  
         <input
@@ -322,11 +344,11 @@ export default function Menu() {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
             flex: 1,
-            minWidth: '180px',
-            padding: '10px 16px',
-            borderRadius: '20px',
+            minWidth: '0',
+            padding: '8px 12px',
+            borderRadius: '16px',
             border: '1px solid #E5DFD3',
-            fontSize: '13px',
+            fontSize: '12px',
             fontWeight: '600',
             backgroundColor: '#FFFFFF',
             color: '#1C2A20',
@@ -338,19 +360,20 @@ export default function Menu() {
         <div style={{
           display: 'flex',
           backgroundColor: '#FFFFFF',
-          padding: '3px',
-          borderRadius: '20px',
-          border: '1px solid #EAE3D9'
+          padding: '2px',
+          borderRadius: '16px',
+          border: '1px solid #EAE3D9',
+          flexShrink: 0
         }}>
           {['uz', 'en', 'ru'].map((l) => (
             <button
               key={l}
               onClick={() => setLang(l)}
               style={{
-                padding: '6px 12px',
-                borderRadius: '16px',
+                padding: '4px 8px',
+                borderRadius: '12px',
                 fontWeight: '800',
-                fontSize: '11px',
+                fontSize: '10px',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 backgroundColor: lang === l ? '#1C2A20' : 'transparent',
@@ -364,9 +387,9 @@ export default function Menu() {
         </div>
       </div>
 
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '12px' }}>
  
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
           {menuData.categories.map((cat) => (
             <button
               key={cat.key}
@@ -376,12 +399,12 @@ export default function Menu() {
               }}
               style={{
                 flex: 1,
-                padding: '12px 0',
-                borderRadius: '14px',
+                padding: '10px 0',
+                borderRadius: '12px',
                 border: 'none',
                 backgroundColor: selectedMainCat === cat.key ? '#1C2A20' : '#EFEBE4',
                 color: selectedMainCat === cat.key ? '#FFC72C' : '#6B7280',
-                fontSize: '15px',
+                fontSize: '13px',
                 fontWeight: '800',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
@@ -392,16 +415,16 @@ export default function Menu() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
+        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '6px', scrollbarWidth: 'none' }}>
           {menuData.subCategories.map((sub) => (
             <button
               key={sub.key}
               onClick={() => setSelectedSubCat(sub.key)}
               style={{
                 border: selectedSubCat === sub.key ? '1.5px solid #FFC72C' : '1px solid #E5E0D8',
-                padding: '8px 16px',
-                borderRadius: '20px',
-                fontSize: '13px',
+                padding: '6px 12px',
+                borderRadius: '16px',
+                fontSize: '11px',
                 fontWeight: '700',
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
@@ -415,130 +438,119 @@ export default function Menu() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '20px 0 16px 0' }}>
-          <h2 style={{ fontSize: '22px', fontWeight: '800', margin: 0, color: '#1C2A20' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '14px 0 10px 0' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#1C2A20' }}>
             {selectedSubCat === 'all' ? t.categories[selectedMainCat] : t.subCategories[selectedSubCat]}
           </h2>
-          <span style={{ fontSize: '12px', fontWeight: '700', color: '#D97706', backgroundColor: '#FFFBEB', padding: '4px 10px', borderRadius: '12px' }}>
+          <span style={{ fontSize: '11px', fontWeight: '700', color: '#D97706', backgroundColor: '#FFFBEB', padding: '3px 8px', borderRadius: '10px' }}>
             {filteredItems.length} {t.itemsUnit}
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px', alignItems: 'stretch' }}>
+        <div className="menu-grid">
           {filteredItems.map((item) => {
-            const currentName = item.name[lang] || item.name['uz'];
-            const currentDesc = item.description[lang] || item.description['uz'];
+            const currentName = item.name[lang] || item.name['uz'] || '';
+            const currentDesc = item.description[lang] || item.description['uz'] || '';
 
             return (
               <div
                 key={item.id}
                 style={{
                   backgroundColor: '#FFFFFF',
-                  borderRadius: '22px',
-                  padding: '16px',
+                  borderRadius: '14px',
+                  border: '1px solid #EAE3D9',
+                  overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  border: '1px solid #EFEBE4',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
-                  position: 'relative',
-                  boxSizing: 'border-box'
+                  justify: 'space-between',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                  position: 'relative'
                 }}
               >
-                <div>
-                  <div 
-                    className="card-img-container"
-                    style={{
-                      width: '100%',
-                      height: '280px',
-                      borderRadius: '16px',
-                      backgroundColor: '#F4F0EA',
-                      overflow: 'hidden',
-                      position: 'relative',
-                      marginBottom: '14px',
-                      flexShrink: 0
-                    }}
-                  >
-                    {item.imageSrc ? (
-                      <img
-                        src={item.imageSrc}
-                        alt={currentName}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontSize: '12px', color: '#9CA3AF', fontWeight: '600' }}>{t.noImage}</span>
-                      </div>
-                    )}
-                    
-                    {item.isNew && (
-                      <span style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '10px',
-                        backgroundColor: '#FFC72C',
-                        color: '#1C2A20',
-                        fontSize: '10px',
-                        fontWeight: '900',
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                      }}>
-                        NEW
-                      </span>
-                    )}
-                  </div>
+                {item.isNew && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '6px',
+                    left: '6px',
+                    backgroundColor: '#FFC72C',
+                    color: '#1C2A20',
+                    fontSize: '9px',
+                    fontWeight: '900',
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                    zIndex: 2
+                  }}>
+                    NEW
+                  </span>
+                )}
 
-                  <div style={{ marginBottom: '12px' }}>
-                    <h3 style={{ fontSize: '17px', fontWeight: '800', margin: '0 0 6px 0', color: '#1C2A20', lineHeight: '1.3' }}>
+                <div className="card-img-container" style={{ width: '100%', height: '95px', backgroundColor: '#F5EFE6', overflow: 'hidden' }}>
+                  {item.imageSrc ? (
+                    <img src={item.imageSrc} alt={currentName} />
+                  ) : (
+                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF', fontSize: '10px' }}>
+                      {t.noImage}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ padding: '8px', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
+                  <div>
+                    <h3 style={{ fontSize: '11px', fontWeight: '700', margin: '0 0 4px 0', color: '#1C2A20', lineHeight: '1.2' }}>
                       {currentName}
                     </h3>
                     {currentDesc && (
-                      <p style={{ fontSize: '12px', color: '#6B7280', margin: 0, lineHeight: '1.4' }}>
+                      <p style={{
+                        fontSize: '9px',
+                        color: '#6B7280',
+                        margin: '0 0 6px 0',
+                        lineHeight: '1.2',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
                         {currentDesc}
                       </p>
                     )}
                   </div>
-                </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingTop: '12px', marginTop: 'auto' }}>
                   <div>
-                    {item.oldPrice && (
-                      <span style={{ fontSize: '11px', color: '#9CA3AF', textDecoration: 'line-through', display: 'block', marginBottom: '2px' }}>
-                        {item.oldPrice}
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '11px', fontWeight: '800', color: '#1C2A20' }}>
+                        {item.price} {t.currency}
                       </span>
-                    )}
-                    <span style={{ fontSize: '17px', fontWeight: '900', color: '#1C2A20', lineHeight: '1' }}>
-                      {item.price} <span style={{ fontSize: '11px', color: '#D97706', fontWeight: '700' }}>{t.currency}</span>
-                    </span>
+                      {item.oldPrice && (
+                        <span style={{ fontSize: '9px', color: '#9CA3AF', textDecoration: 'line-through' }}>
+                          {item.oldPrice}
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => addToCart({ ...item, name: currentName, price: item.price })}
+                      style={{
+                        width: '100%',
+                        padding: '6px 0',
+                        backgroundColor: '#1C2A20',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '10px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s ease'
+                      }}
+                    >
+                      +
+                    </button>
                   </div>
-
-                  <button 
-                    onClick={() => addToCart({ ...item, name: currentName, description: currentDesc })}
-                    style={{
-                      backgroundColor: '#FFC72C',
-                      border: 'none',
-                      width: '40px',
-                      height: '38px',
-                      borderRadius: '12px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      fontWeight: '800',
-                      fontSize: '18px',
-                      color: '#1C2A20',
-                      boxShadow: '0 2px 8px rgba(255, 199, 44, 0.4)'
-                    }}
-                  >
-                    +
-                  </button>
                 </div>
-
               </div>
             );
           })}
         </div>
+
       </div>
     </div>
   );
