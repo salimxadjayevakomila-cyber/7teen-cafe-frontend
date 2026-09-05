@@ -1,4 +1,4 @@
- import React, { useState } from 'react';
+ import React, { useState } from 'react'; 
 import { useCart } from '../context/CartContext';
 
 const translations = {
@@ -292,37 +292,76 @@ export default function Menu() {
     <div style={{ minHeight: '100vh', backgroundColor: '#FAF7F2', color: '#1C2A20', fontFamily: 'Inter, sans-serif', paddingBottom: '60px' }}>
       
       <style>{`
+        /* 4 ta kartochkagacha avto moslashuvchi Ixcham Grid Layout */
+        .menu-grid {
+          display: grid;
+          grid-template-columns: repeat(1, 1fr);
+          gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+          .menu-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+        }
+
+        @media (min-width: 900px) {
+          .menu-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .menu-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+          }
+        }
+
+        /* Card konteyneri va uning balandligi */
+        .menu-card {
+          background-color: #FFFFFF;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+          border: 1px solid #EFEBE4;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .menu-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Rasmni ezib qo'ymaslik (object-fit: cover) va Ixcham balandlik */
+        .card-img-container {
+          width: 100%;
+          height: 160px; /* Rasmni ixchamlash uchun 160px */
+          overflow: hidden;
+          background-color: #EFEBE4;
+          position: relative;
+        }
+
         .card-img-container img {
           width: 100% !important;
           height: 100% !important;
           object-fit: cover !important;
           object-position: center !important;
           display: block !important;
+          transition: transform 0.3s ease;
         }
 
-        /* Bon! Cafe stiliga moslashtirilgan grid: Telefondan 3 ta ustun */
-        .menu-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 8px;
-          align-items: stretch;
-        }
-
-        @media (min-width: 640px) {
-          .menu-grid {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .menu-grid {
-            grid-template-columns: repeat(6, 1fr);
-            gap: 16px;
-          }
+        .menu-card:hover .card-img-container img {
+          transform: scale(1.04);
         }
       `}</style>
 
+      {/* Qidiruv va Til paneli */}
       <div style={{
         backgroundColor: '#F5EFE6',
         padding: '12px 14px',
@@ -336,7 +375,6 @@ export default function Menu() {
         gap: '8px',
         flexWrap: 'nowrap'
       }}>
- 
         <input
           type="text"
           placeholder={t.searchPlaceholder}
@@ -345,10 +383,10 @@ export default function Menu() {
           style={{
             flex: 1,
             minWidth: '0',
-            padding: '8px 12px',
+            padding: '10px 14px',
             borderRadius: '16px',
             border: '1px solid #E5DFD3',
-            fontSize: '12px',
+            fontSize: '13px',
             fontWeight: '600',
             backgroundColor: '#FFFFFF',
             color: '#1C2A20',
@@ -370,10 +408,10 @@ export default function Menu() {
               key={l}
               onClick={() => setLang(l)}
               style={{
-                padding: '4px 8px',
+                padding: '6px 10px',
                 borderRadius: '12px',
                 fontWeight: '800',
-                fontSize: '10px',
+                fontSize: '11px',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 backgroundColor: lang === l ? '#1C2A20' : 'transparent',
@@ -387,9 +425,9 @@ export default function Menu() {
         </div>
       </div>
 
-      <div style={{ padding: '12px' }}>
- 
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+      <div style={{ padding: '16px' }}>
+        {/* Asosiy kategoriyalar (Taomlar / Ichimliklar) */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
           {menuData.categories.map((cat) => (
             <button
               key={cat.key}
@@ -399,12 +437,12 @@ export default function Menu() {
               }}
               style={{
                 flex: 1,
-                padding: '10px 0',
-                borderRadius: '12px',
+                padding: '12px 0',
+                borderRadius: '14px',
                 border: 'none',
                 backgroundColor: selectedMainCat === cat.key ? '#1C2A20' : '#EFEBE4',
                 color: selectedMainCat === cat.key ? '#FFC72C' : '#6B7280',
-                fontSize: '13px',
+                fontSize: '14px',
                 fontWeight: '800',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
@@ -415,22 +453,22 @@ export default function Menu() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '6px', scrollbarWidth: 'none' }}>
+        {/* Sub-kategoriyalar slider */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', scrollbarWidth: 'none' }}>
           {menuData.subCategories.map((sub) => (
             <button
               key={sub.key}
               onClick={() => setSelectedSubCat(sub.key)}
               style={{
                 border: selectedSubCat === sub.key ? '1.5px solid #FFC72C' : '1px solid #E5E0D8',
-                padding: '6px 12px',
-                borderRadius: '16px',
-                fontSize: '11px',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '12px',
                 fontWeight: '700',
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
-                backgroundColor: selectedSubCat === sub.key ? '#FFFFFF' : '#FAF7F2',
-                color: selectedSubCat === sub.key ? '#1C2A20' : '#6B7280',
-                transition: 'all 0.2s ease'
+                backgroundColor: selectedSubCat === sub.key ? '#FFFFFF' : '#EFEBE4',
+                color: '#1C2A20'
               }}
             >
               {t.subCategories[sub.labelKey]}
@@ -438,119 +476,113 @@ export default function Menu() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '14px 0 10px 0' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: '#1C2A20' }}>
-            {selectedSubCat === 'all' ? t.categories[selectedMainCat] : t.subCategories[selectedSubCat]}
+        {/* Sarlavha hamda natijalar soni */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '12px 0 16px 0' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#1C2A20', margin: 0 }}>
+            {t.subCategories[selectedSubCat] || t.subCategories.all}
           </h2>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#D97706', backgroundColor: '#FFFBEB', padding: '3px 8px', borderRadius: '10px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#E07A5F' }}>
             {filteredItems.length} {t.itemsUnit}
           </span>
         </div>
 
+        {/* Menu Kartochkalari Grid Paneli */}
         <div className="menu-grid">
           {filteredItems.map((item) => {
-            const currentName = item.name[lang] || item.name['uz'] || '';
-            const currentDesc = item.description[lang] || item.description['uz'] || '';
+            const name = item.name[lang] || item.name['uz'];
+            const description = item.description[lang] || item.description['uz'];
 
             return (
-              <div
-                key={item.id}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '14px',
-                  border: '1px solid #EAE3D9',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justify: 'space-between',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                  position: 'relative'
-                }}
-              >
-                {item.isNew && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '6px',
-                    left: '6px',
-                    backgroundColor: '#FFC72C',
-                    color: '#1C2A20',
-                    fontSize: '9px',
-                    fontWeight: '900',
-                    padding: '2px 6px',
-                    borderRadius: '6px',
-                    zIndex: 2
-                  }}>
-                    NEW
-                  </span>
-                )}
-
-                <div className="card-img-container" style={{ width: '100%', height: '95px', backgroundColor: '#F5EFE6', overflow: 'hidden' }}>
-                  {item.imageSrc ? (
-                    <img src={item.imageSrc} alt={currentName} />
-                  ) : (
-                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF', fontSize: '10px' }}>
-                      {t.noImage}
-                    </div>
-                  )}
-                </div>
-
-                <div style={{ padding: '8px', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
-                  <div>
-                    <h3 style={{ fontSize: '11px', fontWeight: '700', margin: '0 0 4px 0', color: '#1C2A20', lineHeight: '1.2' }}>
-                      {currentName}
-                    </h3>
-                    {currentDesc && (
-                      <p style={{
-                        fontSize: '9px',
-                        color: '#6B7280',
-                        margin: '0 0 6px 0',
-                        lineHeight: '1.2',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
+              <div key={item.id} className="menu-card">
+                <div>
+                  {/* Card Rasm Joyi */}
+                  <div className="card-img-container">
+                    {item.isNew && (
+                      <span style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        backgroundColor: '#FFC72C',
+                        color: '#1C2A20',
+                        fontSize: '10px',
+                        fontWeight: '900',
+                        padding: '3px 8px',
+                        borderRadius: '6px',
+                        zIndex: 2,
+                        letterSpacing: '0.5px'
                       }}>
-                        {currentDesc}
-                      </p>
+                        NEW
+                      </span>
+                    )}
+                    {item.imageSrc ? (
+                      <img src={item.imageSrc} alt={name} />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF', fontSize: '12px' }}>
+                        {t.noImage}
+                      </div>
                     )}
                   </div>
 
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '11px', fontWeight: '800', color: '#1C2A20' }}>
-                        {item.price} {t.currency}
-                      </span>
-                      {item.oldPrice && (
-                        <span style={{ fontSize: '9px', color: '#9CA3AF', textDecoration: 'line-through' }}>
-                          {item.oldPrice}
-                        </span>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => addToCart({ ...item, name: currentName, price: item.price })}
-                      style={{
-                        width: '100%',
-                        padding: '6px 0',
-                        backgroundColor: '#1C2A20',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '10px',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                    >
-                      +
-                    </button>
+                  {/* Card Kontenti */}
+                  <div style={{ padding: '12px 14px 6px 14px' }}>
+                    <h3 style={{ fontSize: '14px', fontWeight: '700', margin: '0 0 6px 0', color: '#1C2A20', lineHeight: '1.2' }}>
+                      {name}
+                    </h3>
+                    {description && (
+                      <p style={{
+                        fontSize: '11px',
+                        color: '#6B7280',
+                        margin: 0,
+                        lineHeight: '1.4',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'orient',
+                        overflow: 'hidden'
+                      }}>
+                        {description}
+                      </p>
+                    )}
                   </div>
+                </div>
+
+                {/* Narx va Savatchaga qo'shish tugmasi */}
+                <div style={{ padding: '8px 14px 14px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '800', color: '#1C2A20' }}>
+                      {item.price} {t.currency}
+                    </span>
+                    {item.oldPrice && (
+                      <span style={{ fontSize: '11px', textDecoration: 'line-through', color: '#9CA3AF' }}>
+                        {item.oldPrice}
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => addToCart(item)}
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#1C2A20',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '10px',
+                      padding: '8px 0',
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'background-color 0.2s ease'
+                    }}
+                  >
+                    +
+                  </button>
                 </div>
               </div>
             );
           })}
         </div>
-
       </div>
     </div>
   );

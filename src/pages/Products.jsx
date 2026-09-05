@@ -38,7 +38,7 @@ export const Products = () => {
       : products.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="p-2 sm:p-5 max-w-7xl mx-auto">
+    <div className="p-3 sm:p-6 max-w-7xl mx-auto w-full">
       <CategoryFilter
         categories={categories}
         selectedCategory={selectedCategory}
@@ -48,7 +48,8 @@ export const Products = () => {
       {isLoading ? (
         <Loading />
       ) : filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-4 mt-4">
+        /* Mobil: 3 ustun, Noutbuk va barcha katta ekranlar: RO'PA-RO'SA 4 USTUN */
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-6 mt-4">
           {filteredProducts.map((item) => (
             <ProductsCard key={item._id || item.id} product={item} />
           ))}
