@@ -94,12 +94,12 @@ const Cart = () => {
   const [createdOrderId, setCreatedOrderId] = useState(null);
   
   const navigate = useNavigate();
-  const t = translations[lang];
+  const t = translations[lang] || translations.uz;
 
   const cartItems = cart || [];
 
   const totalPrice = cartItems.reduce((acc, item) => {
-    const rawPrice = item.productId?.price ?? item.price ?? 0;
+    const rawPrice = item.price ?? item.productId?.price ?? 0;
     const price = parsePrice(rawPrice);
     const qty = Number(item.quantity) || 1;
     return acc + price * qty;
@@ -110,19 +110,28 @@ const Cart = () => {
   const grandTotal = totalPrice + deliveryFee;
   const progressPercent = Math.min(100, (totalPrice / freeDeliveryTarget) * 100);
 
+  const getDeliveryProgressText = () => {
+    if (totalPrice >= freeDeliveryTarget) {
+      return String(t.freeDeliveryAchieved);
+    }
+    const amountNeeded = (freeDeliveryTarget - totalPrice).toLocaleString();
+    const template = String(t.freeDeliveryNeedMore || "");
+    return template.replace("{amount}", amountNeeded);
+  };
+
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
 
     try {
       const formattedItems = cartItems.map((item) => {
-        const prodId = item.productId?._id || item._id || item.productId || item.id;
-        const rawPrice = item.productId?.price ?? item.price ?? 0;
-        const productName = item.productId?.title || item.productId?.name || item.title || item.name || t.itemDefaultTitle;
+        const prodId = item._id || item.id || item.productId?._id || item.productId;
+        const rawPrice = item.price ?? item.productId?.price ?? 0;
+        const productName = item.title || item.name || item.productId?.title || item.productId?.name || t.itemDefaultTitle;
 
         return {
           productId: String(prodId),
-          name: productName,
-          title: productName,
+          name: String(productName),
+          title: String(productName),
           quantity: Number(item.quantity) || 1,
           price: parsePrice(rawPrice),
         };
@@ -233,9 +242,7 @@ const Cart = () => {
               <div style={styles.progressCard}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                   <span style={{ fontSize: "13px", fontWeight: "800", color: "#1C2A20" }}>
-                    {totalPrice >= freeDeliveryTarget 
-                      ? t.freeDeliveryAchieved 
-                      : t.freeDeliveryNeedMore.replace("{amount}", (freeDeliveryTarget - totalPrice).toLocaleString())}
+                    {getDeliveryProgressText()}
                   </span>
                   <span style={styles.percentBadge}>{Math.round(progressPercent)}%</span>
                 </div>
@@ -245,29 +252,33 @@ const Cart = () => {
               </div>
 
               {cartItems.map((item, idx) => {
-                const id = item._id || item.productId?._id || item.id || idx;
-                const title = item.productId?.title || item.productId?.name || item.title || item.name || t.itemDefaultTitle;
-                const price = parsePrice(item.productId?.price ?? item.price ?? 0);
+                const id = item._id || item.id || item.productId?._id || idx;
+                const title = item.title || item.name || item.productId?.title || item.productId?.name || t.itemDefaultTitle;
+                const price = parsePrice(item.price ?? item.productId?.price ?? 0);
                 const qty = Number(item.quantity) || 1;
-                const image = item.imageSrc || item.image || item.productId?.image;
+                const image = item.imageSrc || item.image || item.productId?.imageSrc || item.productId?.image;
 
                 return (
-                  <div key={id} className="receipt-card" style={styles.itemCard}>
+                  <div key={String(id)} className="receipt-card" style={styles.itemCard}>
                     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                       <div style={styles.itemIconBox}>
                         {image ? (
                           <img 
                             src={image} 
-                            alt={title} 
+                            alt={String(title)} 
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'https://via.placeholder.com/100?text=7TEEN';
+                            }}
                             style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} 
                           />
                         ) : (
-                          <span>🥪</span>
+                          <span>☕️</span>
                         )}
                       </div>
 
                       <div>
-                        <h3 style={styles.itemTitle}>{title}</h3>
+                        <h3 style={styles.itemTitle}>{String(title)}</h3>
                         <p style={styles.itemSinglePrice}>{price.toLocaleString()} {t.currency}</p>
 
                         <div style={styles.qtyBox}>
