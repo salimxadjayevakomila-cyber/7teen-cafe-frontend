@@ -424,7 +424,7 @@ export default function Brand() {
         status: "pending",
       };
 
-      const response = await fetch("http://localhost:3008/api/orders", {
+      const response = await fetch("https://seventeen-cafe-backend.onrender.com/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),

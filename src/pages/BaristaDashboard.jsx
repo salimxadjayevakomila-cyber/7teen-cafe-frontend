@@ -7,7 +7,7 @@ const BaristaDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:3008/api/orders");
+      const response = await fetch( "https://seventeen-cafe-backend.onrender.com/api/orders");
       const data = await response.json();
 
       if (Array.isArray(data)) {
