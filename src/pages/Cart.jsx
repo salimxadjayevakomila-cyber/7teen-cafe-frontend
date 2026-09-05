@@ -87,6 +87,18 @@ const parsePrice = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
+// Ob'ektdan toza string ajratib oluvchi xavfsiz funksiya
+const extractTitle = (val, lang = "uz", defaultVal = "7TEEN Product") => {
+  if (!val) return defaultVal;
+  if (typeof val === "string") {
+    return val === "[object Object]" ? defaultVal : val;
+  }
+  if (typeof val === "object") {
+    return val[lang] || val.uz || val.ru || val.en || val.title || val.name || Object.values(val)[0] || defaultVal;
+  }
+  return String(val);
+};
+
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const [lang, setLang] = useState("uz");
@@ -126,12 +138,13 @@ const Cart = () => {
       const formattedItems = cartItems.map((item) => {
         const prodId = item._id || item.id || item.productId?._id || item.productId;
         const rawPrice = item.price ?? item.productId?.price ?? 0;
-        const productName = item.title || item.name || item.productId?.title || item.productId?.name || t.itemDefaultTitle;
+        const rawTitle = item.title || item.name || item.productId?.title || item.productId?.name;
+        const cleanName = extractTitle(rawTitle, lang, t.itemDefaultTitle);
 
         return {
           productId: String(prodId),
-          name: String(productName),
-          title: String(productName),
+          name: cleanName,
+          title: cleanName,
           quantity: Number(item.quantity) || 1,
           price: parsePrice(rawPrice),
         };
@@ -253,7 +266,8 @@ const Cart = () => {
 
               {cartItems.map((item, idx) => {
                 const id = item._id || item.id || item.productId?._id || idx;
-                const title = item.title || item.name || item.productId?.title || item.productId?.name || t.itemDefaultTitle;
+                const rawTitle = item.title || item.name || item.productId?.title || item.productId?.name;
+                const displayTitle = extractTitle(rawTitle, lang, t.itemDefaultTitle);
                 const price = parsePrice(item.price ?? item.productId?.price ?? 0);
                 const qty = Number(item.quantity) || 1;
                 const image = item.imageSrc || item.image || item.productId?.imageSrc || item.productId?.image;
@@ -265,7 +279,7 @@ const Cart = () => {
                         {image ? (
                           <img 
                             src={image} 
-                            alt={String(title)} 
+                            alt={displayTitle} 
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.src = 'https://via.placeholder.com/100?text=7TEEN';
@@ -278,7 +292,7 @@ const Cart = () => {
                       </div>
 
                       <div>
-                        <h3 style={styles.itemTitle}>{String(title)}</h3>
+                        <h3 style={styles.itemTitle}>{displayTitle}</h3>
                         <p style={styles.itemSinglePrice}>{price.toLocaleString()} {t.currency}</p>
 
                         <div style={styles.qtyBox}>

@@ -50,21 +50,30 @@ const BaristaDashboard = () => {
     }
   };
 
-  // Mahsulot nomini obyekt yoki stringligiga qarab to'g'ri matn shaklida ajratib olish
+  // Mahsulot nomini [object Object] bolmasdan har qanday holatda matn qilib ajratib beruvchi xavfsiz funksiya
   const renderProductName = (item) => {
     if (!item) return "7TEEN Product";
 
-    // 1. item ichidan nomini qidiramiz
-    const rawVal = item.title || item.name || item.productId?.title || item.productId?.name;
+    // 1. Dastlab xom qiymatni topamiz (title, name yoki productId ichidan)
+    let raw = item.title || item.name || item.productId?.title || item.productId?.name;
 
-    // 2. Agar rawVal ko'p tilli (i18n) obyekt bo'lsa { uz: '...', ru: '...' }
-    if (typeof rawVal === "object" && rawVal !== null) {
-      return rawVal.uz || rawVal.ru || rawVal.en || Object.values(rawVal)[0] || "7TEEN Product";
+    // 2. Agar raw qiymat topilmasa, item'ning o'zini tekshiramiz
+    if (!raw && typeof item === "string") return item;
+
+    // 3. Agar raw obyekt bo'lsa (masalan: { uz: "Kapuchino", ru: "Капучино" })
+    if (typeof raw === "object" && raw !== null) {
+      const extracted = raw.uz || raw.ru || raw.en || raw.name || raw.title;
+      if (extracted && typeof extracted === "string") return extracted;
+      
+      // Ob'ekt ichidagi birinchi string qiymatni qidirish
+      const values = Object.values(raw);
+      const stringVal = values.find((v) => typeof v === "string" && v.trim() !== "");
+      if (stringVal) return stringVal;
     }
 
-    // 3. Agar rawVal oddiy string matn bo'lsa
-    if (typeof rawVal === "string" && rawVal.trim() !== "") {
-      return rawVal;
+    // 4. Agar raw tayyor matn (string) bo'lsa
+    if (typeof raw === "string" && raw.trim() !== "" && raw !== "[object Object]") {
+      return raw;
     }
 
     return "7TEEN Product";
@@ -349,7 +358,6 @@ const BaristaDashboard = () => {
 
                         <div style={{ borderTop: "1px dashed #2D4733", borderBottom: "1px dashed #2D4733", padding: "12px 0", margin: "12px 0" }}>
                           {order.items?.map((item, idx) => {
-                            // item'ning to'liq ob'ektini renderProductName ga uzatamiz
                             const prodName = renderProductName(item);
                             const itemPrice = typeof item.price === "number" ? item.price.toLocaleString() : 0;
 

@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import instance from '../utils/axios';
+import { useCart } from '../context/CartContext';
+
+const extractTitle = (val, defaultVal = "7TEEN Product") => {
+  if (!val) return defaultVal;
+  if (typeof val === "string") return val === "[object Object]" ? defaultVal : val;
+  if (typeof val === "object") {
+    return val.uz || val.ru || val.en || val.title || val.name || Object.values(val)[0] || defaultVal;
+  }
+  return String(val);
+};
 
 export const Checkout = () => {
-  
+  const { cart, clearCart } = useCart();
+
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -14,7 +25,6 @@ export const Checkout = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -23,15 +33,45 @@ export const Checkout = () => {
     }));
   };
 
- 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
- 
-    instance.post('/orders', formData)
+
+    const cartItems = cart || [];
+
+    // Savatdagi mahsulotlarni backend uchun xavfsiz holatga keltiramiz
+    const formattedItems = cartItems.map((item) => {
+      const prodId = item._id || item.id || item.productId?._id || item.productId;
+      const rawPrice = item.price ?? item.productId?.price ?? 0;
+      const rawTitle = item.title || item.name || item.productId?.title || item.productId?.name;
+      const cleanName = extractTitle(rawTitle);
+
+      return {
+        productId: String(prodId),
+        title: cleanName,
+        name: cleanName,
+        quantity: Number(item.quantity) || 1,
+        price: Number(rawPrice) || 0,
+      };
+    });
+
+    const calculatedTotal = formattedItems.reduce((acc, i) => acc + i.price * i.quantity, 0);
+
+    const orderPayload = {
+      ...formData,
+      customerName: formData.fullName,
+      customerPhone: formData.phone,
+      items: formattedItems,
+      totalPrice: calculatedTotal,
+      orderType: 'delivery',
+      status: 'accepted'
+    };
+
+    instance.post('/orders', orderPayload)
       .then((res) => {
         console.log('Buyurtma qabul qilindi:', res.data);
         setIsSuccess(true);
+        if (clearCart) clearCart();
       })
       .catch((err) => {
         console.error('Xatolik yuz berdi:', err);
@@ -42,7 +82,6 @@ export const Checkout = () => {
       });
   };
 
- 
   if (isSuccess) {
     return (
       <div className="max-w-md mx-auto my-10 p-6 bg-green-50 border border-green-200 rounded-xl text-center shadow-sm">
@@ -63,7 +102,6 @@ export const Checkout = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Buyurtmani rasmiylashtirish</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-      
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">To'liq ismingiz</label>
           <input
@@ -77,7 +115,6 @@ export const Checkout = () => {
           />
         </div>
 
-        
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Telefon raqamingiz</label>
           <input
@@ -91,7 +128,6 @@ export const Checkout = () => {
           />
         </div>
 
-    
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Yetkazib berish manzili</label>
           <textarea
@@ -105,7 +141,6 @@ export const Checkout = () => {
           ></textarea>
         </div>
 
-      
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">To'lov turi</label>
           <select
@@ -119,7 +154,6 @@ export const Checkout = () => {
           </select>
         </div>
 
-    
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Qo'shimcha izoh (ixtiyoriy)</label>
           <input
@@ -132,7 +166,6 @@ export const Checkout = () => {
           />
         </div>
 
-      
         <button
           type="submit"
           disabled={isLoading}
