@@ -50,13 +50,24 @@ const BaristaDashboard = () => {
     }
   };
 
-  // Mahsulot nomini obyekt yoki stringligiga qarab to'g'ri matn shaklida olish
-  const renderProductName = (title) => {
-    if (!title) return "7TEEN Product";
-    if (typeof title === "object") {
-      return title.uz || title.ru || title.en || title.name || "7TEEN Product";
+  // Mahsulot nomini obyekt yoki stringligiga qarab to'g'ri matn shaklida ajratib olish
+  const renderProductName = (item) => {
+    if (!item) return "7TEEN Product";
+
+    // 1. item ichidan nomini qidiramiz
+    const rawVal = item.title || item.name || item.productId?.title || item.productId?.name;
+
+    // 2. Agar rawVal ko'p tilli (i18n) obyekt bo'lsa { uz: '...', ru: '...' }
+    if (typeof rawVal === "object" && rawVal !== null) {
+      return rawVal.uz || rawVal.ru || rawVal.en || Object.values(rawVal)[0] || "7TEEN Product";
     }
-    return String(title);
+
+    // 3. Agar rawVal oddiy string matn bo'lsa
+    if (typeof rawVal === "string" && rawVal.trim() !== "") {
+      return rawVal;
+    }
+
+    return "7TEEN Product";
   };
 
   const filteredOrders = (orders || []).filter((ord) => {
@@ -338,8 +349,8 @@ const BaristaDashboard = () => {
 
                         <div style={{ borderTop: "1px dashed #2D4733", borderBottom: "1px dashed #2D4733", padding: "12px 0", margin: "12px 0" }}>
                           {order.items?.map((item, idx) => {
-                            const rawTitle = item.title || item.name || item.productId?.title || item.productId?.name;
-                            const prodName = renderProductName(rawTitle);
+                            // item'ning to'liq ob'ektini renderProductName ga uzatamiz
+                            const prodName = renderProductName(item);
                             const itemPrice = typeof item.price === "number" ? item.price.toLocaleString() : 0;
 
                             return (
