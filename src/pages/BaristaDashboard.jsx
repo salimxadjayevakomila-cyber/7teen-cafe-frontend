@@ -7,7 +7,7 @@ const BaristaDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch( "https://seventeen-cafe-backend.onrender.com/api/orders");
+      const response = await fetch("https://seventeen-cafe-backend.onrender.com/api/orders");
       const data = await response.json();
 
       if (Array.isArray(data)) {
@@ -32,7 +32,7 @@ const BaristaDashboard = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:3008/api/orders/${orderId}`, {
+      const response = await fetch(`https://seventeen-cafe-backend.onrender.com/api/orders/${orderId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -42,10 +42,21 @@ const BaristaDashboard = () => {
         setOrders((prev) =>
           prev.map((ord) => (ord._id === orderId ? { ...ord, status: newStatus } : ord))
         );
+      } else {
+        console.error("Status yangilanmadi, status kodi:", response.status);
       }
     } catch (error) {
       console.error("Status xatoligi:", error);
     }
+  };
+
+  // Mahsulot nomini obyekt yoki stringligiga qarab to'g'ri matn shaklida olish
+  const renderProductName = (title) => {
+    if (!title) return "7TEEN Product";
+    if (typeof title === "object") {
+      return title.uz || title.ru || title.en || title.name || "7TEEN Product";
+    }
+    return String(title);
   };
 
   const filteredOrders = (orders || []).filter((ord) => {
@@ -327,8 +338,9 @@ const BaristaDashboard = () => {
 
                         <div style={{ borderTop: "1px dashed #2D4733", borderBottom: "1px dashed #2D4733", padding: "12px 0", margin: "12px 0" }}>
                           {order.items?.map((item, idx) => {
-                            const prodName = item.title || item.name || item.productId?.title || item.productId?.name || "7TEEN Product";
-                            const itemPrice = item.price ? item.price.toLocaleString() : 0;
+                            const rawTitle = item.title || item.name || item.productId?.title || item.productId?.name;
+                            const prodName = renderProductName(rawTitle);
+                            const itemPrice = typeof item.price === "number" ? item.price.toLocaleString() : 0;
 
                             return (
                               <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px", margin: "8px 0", color: "#F5EFE6" }}>
