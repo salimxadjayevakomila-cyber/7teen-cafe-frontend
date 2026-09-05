@@ -361,8 +361,7 @@ export default function Menu() {
         }
       `}</style>
 
-      {/* Qidiruv va Til paneli */}
-      <div style={{
+    <div style={{
         backgroundColor: '#F5EFE6',
         padding: '12px 14px',
         color: '#1C2A20',
@@ -496,7 +495,17 @@ export default function Menu() {
               <div key={item.id} className="menu-card">
                 <div>
                   {/* Card Rasm Joyi */}
-                  <div className="card-img-container">
+                  <div 
+                    className="card-img-container"
+                    style={{ 
+                      position: 'relative', 
+                      height: '210px', 
+                      width: '100%', 
+                      overflow: 'hidden', 
+                      borderRadius: '14px 14px 0 0',
+                      backgroundColor: '#F8F5F0' 
+                    }}
+                  >
                     {item.isNew && (
                       <span style={{
                         position: 'absolute',
@@ -515,7 +524,17 @@ export default function Menu() {
                       </span>
                     )}
                     {item.imageSrc ? (
-                      <img src={item.imageSrc} alt={name} />
+                      <img 
+                        src={item.imageSrc} 
+                        alt={name} 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover', 
+                          objectPosition: 'center',
+                          display: 'block' 
+                        }}
+                      />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF', fontSize: '12px' }}>
                         {t.noImage}
@@ -524,8 +543,8 @@ export default function Menu() {
                   </div>
 
                   {/* Card Kontenti */}
-                  <div style={{ padding: '12px 14px 6px 14px' }}>
-                    <h3 style={{ fontSize: '14px', fontWeight: '700', margin: '0 0 6px 0', color: '#1C2A20', lineHeight: '1.2' }}>
+                  <div style={{ padding: '16px 14px 8px 14px' }}>
+                    <h3 style={{ fontSize: '15px', fontWeight: '800', margin: '0 0 6px 0', color: '#1C2A20', lineHeight: '1.3' }}>
                       {name}
                     </h3>
                     {description && (
@@ -536,7 +555,7 @@ export default function Menu() {
                         lineHeight: '1.4',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'orient',
+                        WebkitBoxOrient: 'vertical',
                         overflow: 'hidden'
                       }}>
                         {description}
