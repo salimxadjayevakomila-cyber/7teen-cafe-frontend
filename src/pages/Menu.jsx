@@ -499,7 +499,7 @@ export default function Menu() {
                     className="card-img-container"
                     style={{ 
                       position: 'relative', 
-                      height: '210px', 
+                      height: '260px', 
                       width: '100%', 
                       overflow: 'hidden', 
                       borderRadius: '14px 14px 0 0',
